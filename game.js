@@ -1,3 +1,5 @@
+// Splat/tick and event listener onClick taken from in class example: https://jayhawk-nation.web.app/examples/TicTacToe
+
 let canvas;
 let context;
 let BOARD_PADDING = { sides: 20, top: 80, bottom: 40 }
@@ -31,21 +33,25 @@ function makeEmptyBoard() {
 }
 
 function splat() {
+  // Draw background.
   context.fillStyle = "#4a4a4a";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Draw title.
   context.font = "40px Libre Franklin";
   context.fillStyle = "#c5c5c5";
   context.textAlign = "center";
   context.fillText("CONNECT4", canvas.width / 2, 55)
 
+  // Draw move counter.
   context.font = "24px Libre Franklin";
   context.fillStyle = "#c5c5c5";
   context.textAlign = "left";
   context.fillText(`Move Count: ${model.totalMoves}`, BOARD_PADDING.sides, BOARD_PADDING.top - 24);
 
+  // Draw board.
   context.fillStyle = "#3A83C8";
-  context.fillRect(20, 80, 780, 670);
+  context.fillRect(BOARD_PADDING.sides, BOARD_PADDING.top, 780, 670);
 
   for (let o = 80; o < 800; (o += 110)) {
     for (let p = 140; p < 710; (p += 110)) {
@@ -59,12 +65,14 @@ function splat() {
     }
   }
 
+  // Draw win counts.
   context.font = "24px Libre Franklin";
   context.fillStyle = "#c5c5c5";
   context.textAlign = "left";
   context.fillText(`Red Wins: ${model.redWins}`, BOARD_PADDING.sides, 785);
   context.fillText(`Yellow Wins: ${model.yellowWins}`, BOARD_PADDING.sides, 815);
 
+  // Draw reset board button.
   context.fillStyle = "#3A83C8";
   context.fillRect(700, 765, 100, 50);
 
@@ -74,6 +82,7 @@ function splat() {
   context.fillText(`Reset`, 750, 788);
   context.fillText(`Board`, 750, 805);
 
+  // Draw winner/tie/next-turn info text.
   context.font = "38px Libre Franklin";
   context.textAlign = "center";
 
@@ -186,7 +195,7 @@ function checkWin(x, y, color) {
   //Check top right to bottom left diagnoal
   start = { x: 0, y: 0 }
 
-  // get board boundary coordinates
+  // Get board start coordinates
   if (x + y <= 6) {
     start.x = x + y;
   } else if (x + y > 6) {
@@ -236,7 +245,7 @@ function checkArrayWinner(array, color) {
 function resetBoard() {
   let newStarter = 'RED'
 
-  if (model.winner != undefined)
+  if (model.winner != undefined || model.tied == true)
     newStarter = model.next == 'RED' ? 'YELLOW' : 'RED';
 
   model = {
