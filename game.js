@@ -1,6 +1,6 @@
 let canvas;
 let context;
-let BOARD_PADDING = {sides: 20, top: 80, bottom: 40}
+let BOARD_PADDING = { sides: 20, top: 80, bottom: 40 }
 
 let model = {
   board: makeEmptyBoard(),
@@ -48,15 +48,15 @@ function splat() {
   context.fillRect(20, 80, 780, 670);
 
   for (let o = 80; o < 800; (o += 110)) {
-      for(let p = 140; p < 710; (p += 110)) { 
-        let color = model.board[roundX(o)][roundY(p)];
+    for (let p = 140; p < 710; (p += 110)) {
+      let color = model.board[roundX(o)][roundY(p)];
 
-        context.beginPath();
-        context.arc(o, p, 45, 0, 2 * Math.PI);
-        context.fillStyle = color? color : '#2c659c';        
-        context.fill();
-        context.stroke();
-      }
+      context.beginPath();
+      context.arc(o, p, 45, 0, 2 * Math.PI);
+      context.fillStyle = color ? color : '#2c659c';
+      context.fill();
+      context.stroke();
+    }
   }
 
   context.font = "24px Libre Franklin";
@@ -79,30 +79,30 @@ function splat() {
 
   if (model.winner) {
     context.fillStyle = model.winner;
-    context.fillText(`${model.winner} Wins!!`, canvas.width / 2, 805)      
+    context.fillText(`${model.winner} Wins!!`, canvas.width / 2, 805)
   } else if (model.tied) {
     context.fillStyle = "#c5c5c5";
     context.fillText("Tie Game!!", canvas.width / 2, 805)
   } else {
     context.fillStyle = model.next;
     context.fillText(`It is ${model.next}s turn...`, canvas.width / 2, 805)
-  }   
+  }
 
   tick();
 }
 
-document.addEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => {
   canvas = document.querySelector("#myCanvas");
   context = canvas.getContext("2d");
 
   splat();
 })
 
-function roundX(x){ return Math.ceil((x-30)/110)-1 }
-function roundY(x){ return Math.ceil((x-90)/110)-1 }
+function roundX(x) { return Math.ceil((x - 30) / 110) - 1 }
+function roundY(x) { return Math.ceil((x - 90) / 110) - 1 }
 
 document.addEventListener("click", e => {
-  const [i,j] = [roundX(e.x), roundY(e.y)];
+  const [i, j] = [roundX(e.x), roundY(e.y)];
 
   if ((e.x > 707 && e.x < 810) && (e.y > 772 && e.y < 825)) resetBoard();
   if (model.tied) return;
@@ -113,7 +113,7 @@ document.addEventListener("click", e => {
   // Get the y location that the piece falls to.
   let finalY;
   for (let m = 6; m >= 0; m--) {
-    if(model.board[i][m] == '') {
+    if (model.board[i][m] == '') {
       finalY = m;
       break;
     }
@@ -122,7 +122,7 @@ document.addEventListener("click", e => {
   if (finalY !== undefined) {
     model.board[i][finalY] = model.next;
     model.totalMoves++;
-    
+
     // Check for win.
     if (checkWin(i, finalY, model.next)) {
       model.winner = model.next;
@@ -135,7 +135,7 @@ document.addEventListener("click", e => {
       model.tied = true;
     }
 
-    model.next = model.next == 'RED'? 'YELLOW' : 'RED'
+    model.next = model.next == 'RED' ? 'YELLOW' : 'RED'
   } else {
     console.log("ERROR: Invalid placement!!!");
   }
@@ -145,7 +145,7 @@ function checkWin(x, y, color) {
 
   // Check vertical win.
   if (checkArrayWinner(model.board[x], color)) return true;
-  
+
   // Check horizontal.
   let horizontalAry = [];
 
@@ -156,7 +156,7 @@ function checkWin(x, y, color) {
   if (checkArrayWinner(horizontalAry, color)) return true;
 
   // Check top left to bottom right diagnoal
-  let start = {x: 0, y: 0}
+  let start = { x: 0, y: 0 }
 
   // Get board start coordinates
   if (x > y) {
@@ -173,7 +173,7 @@ function checkWin(x, y, color) {
 
   while (onBoard) {
     topLeftToBotRightAry.push(model.board[currentX][currentY]);
-    
+
     currentX++;
     currentY++;
 
@@ -184,7 +184,7 @@ function checkWin(x, y, color) {
   if (checkArrayWinner(topLeftToBotRightAry, color)) return true;
 
   //Check top right to bottom left diagnoal
-  start = {x: 0, y: 0}
+  start = { x: 0, y: 0 }
 
   // get board boundary coordinates
   if (x + y <= 6) {
@@ -211,7 +211,7 @@ function checkWin(x, y, color) {
   }
 
   if (checkArrayWinner(topRightToBotLeftAry, color)) return true;
-    
+
   return false;
 }
 
@@ -219,7 +219,7 @@ function checkArrayWinner(array, color) {
   let highest = 0;
   let count = 0;
 
-  for(let i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     if (array[i] == color)
       count++;
 
@@ -237,7 +237,7 @@ function resetBoard() {
   let newStarter = 'RED'
 
   if (model.winner != undefined)
-    newStarter = model.next == 'RED'? 'YELLOW' : 'RED';
+    newStarter = model.next == 'RED' ? 'YELLOW' : 'RED';
 
   model = {
     board: makeEmptyBoard(),
